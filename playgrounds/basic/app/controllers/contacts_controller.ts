@@ -1,4 +1,4 @@
-import vine from '@vinejs/vine'
+import { z } from 'zod'
 import { type HttpContext } from '@adonisjs/core/http'
 
 interface Contact {
@@ -17,16 +17,16 @@ const contacts: Contact[] = [
 let nextId = 4
 
 export default class ContactsController {
-  static createValidator = vine.create({
-    name: vine.string().minLength(2).maxLength(100),
-    email: vine.string().email(),
-    phone: vine.string().optional(),
+  static createValidator = z.object({
+    name: z.string().min(2).max(100),
+    email: z.string().email(),
+    phone: z.string().optional(),
   })
 
-  static updateValidator = vine.create({
-    name: vine.string().minLength(2).maxLength(100).optional(),
-    email: vine.string().email().optional(),
-    phone: vine.string().optional(),
+  static updateValidator = z.object({
+    name: z.string().min(2).max(100).optional(),
+    email: z.string().email().optional(),
+    phone: z.string().optional(),
   })
 
   async list() {

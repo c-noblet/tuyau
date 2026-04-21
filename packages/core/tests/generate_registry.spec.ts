@@ -113,22 +113,23 @@ test.group('generateTypesContent | validation error injection', () => {
         name: 'users.store',
         methods: ['POST'],
         pattern: '/users',
-        request: { type: 'InferInput<typeof v>', imports: [] },
+        request: { type: 'z.infer<typeof v>', imports: [] },
       }),
     ]
 
     const withDefault = new RegistryGenerator().generateTypesContent(routes)
-    assert.match(withDefault, /import type \{.*SimpleError.*\} from '@vinejs\/vine\/types'/)
+    assert.include(withDefault, 'interface SimpleError')
+    assert.notMatch(withDefault, /from '@vinejs\/vine\/types'/)
 
     const withCustom = new RegistryGenerator({
       validationErrorType: 'MyError',
     }).generateTypesContent(routes)
-    assert.notMatch(withCustom, /import type \{.*SimpleError.*\} from '@vinejs\/vine\/types'/)
+    assert.notInclude(withCustom, 'interface SimpleError')
 
     const withDisabled = new RegistryGenerator({ validationErrorType: false }).generateTypesContent(
       routes,
     )
-    assert.notMatch(withDisabled, /import type \{.*SimpleError.*\} from '@vinejs\/vine\/types'/)
+    assert.notInclude(withDisabled, 'interface SimpleError')
   })
 
   test('mixed routes: only validator routes get 422', ({ assert }) => {

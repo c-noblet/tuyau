@@ -1,4 +1,4 @@
-import vine from '@vinejs/vine'
+import { z } from 'zod'
 import type { HttpContext } from '@adonisjs/core/http'
 
 import User from '#models/user'
@@ -6,8 +6,8 @@ import { signupValidator } from '#validators/user'
 import UserTransformer from '#transformers/user_transformer'
 
 export default class AccountsController {
-  static validator = vine.create({
-    email: vine.string().email(),
+  static validator = z.object({
+    email: z.email(),
   })
 
   async list({ request, serialize }: HttpContext) {
@@ -19,8 +19,8 @@ export default class AccountsController {
     }
   }
 
-  static uploadProfilePictureValidator = vine.create({
-    profilePicture: vine.file(),
+  static uploadProfilePictureValidator = z.object({
+    profilePicture: z.instanceof(File).optional(),
   })
 
   async uploadProfilePicture({ request }: HttpContext) {

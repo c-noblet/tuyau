@@ -309,17 +309,28 @@ declare module '@tuyau/core/types' {
       'ExtractQueryForGet',
       'ExtractResponse',
     ]
-    const vineImports = ['InferInput']
-    if (useDefaultValidationType) vineImports.push('SimpleError')
+
+    const zodImports = ['ZodError']
+    if (useDefaultValidationType) zodImports.push('ZodIssue')
+
+    const simpleErrorDefinition = useDefaultValidationType
+      ? `
+export interface SimpleError {
+  field: string
+  rule: string
+  message: string
+}
+`
+      : ''
 
     return `/* eslint-disable prettier/prettier */
 /// <reference path="../manifest.d.ts" />
 
 import type { ${coreImports.join(', ')} } from '@tuyau/core/types'
-import type { ${vineImports.join(', ')} } from '@vinejs/vine/types'
+import type { ${zodImports.join(', ')} } from 'zod'
 
 export type ParamValue = string | number | bigint | boolean
-
+${simpleErrorDefinition}
 export interface Registry {
 ${registryEntries}
 }

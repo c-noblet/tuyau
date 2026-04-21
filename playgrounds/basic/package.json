@@ -25,13 +25,14 @@
     "#middleware/*": "./app/middleware/*.js",
     "#transformers/*": "./app/transformers/*.js",
     "#validators/*": "./app/validators/*.js",
-    "#providers/*": "./providers/*.js",
+    "#providers/*": "./app/providers/*.js",
     "#policies/*": "./app/policies/*.js",
     "#abilities/*": "./app/abilities/*.js",
     "#database/*": "./database/*.js",
     "#tests/*": "./tests/*.js",
     "#start/*": "./start/*.js",
-    "#config/*": "./config/*.js"
+    "#config/*": "./config/*.js",
+    "#helpers/*": "./app/helpers/*.js"
   },
   "dependencies": {
     "@adonisjs/auth": "^10.0.0",
@@ -48,7 +49,7 @@
     "@tanstack/react-query": "^5.90.21",
     "@tuyau/core": "workspace:*",
     "@tuyau/react-query": "workspace:*",
-    "@vinejs/vine": "^4.3.0",
+    "zod": "^4.3.6",
     "better-sqlite3": "^12.8.0",
     "edge.js": "^6.5.0",
     "luxon": "^3.7.2",

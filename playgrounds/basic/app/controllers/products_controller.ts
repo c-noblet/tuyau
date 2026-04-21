@@ -1,4 +1,4 @@
-import vine from '@vinejs/vine'
+import { z } from 'zod'
 import { type HttpContext } from '@adonisjs/core/http'
 
 const products: Array<{
@@ -17,31 +17,31 @@ const products: Array<{
 ]
 
 export default class ProductsController {
-  static searchValidator = vine.create({
-    headers: vine
+  static searchValidator = z.object({
+    headers: z
       .object({
-        'x-api-key': vine.string(),
+        'x-api-key': z.string(),
       })
       .optional(),
 
-    params: vine
+    params: z
       .object({
-        category: vine.string().optional(),
+        category: z.string().optional(),
       })
       .optional(),
 
-    q: vine.string().optional(),
-    category: vine.string().optional(),
-    minPrice: vine.number().optional(),
-    maxPrice: vine.number().optional(),
-    inStock: vine.boolean().optional(),
+    q: z.string().optional(),
+    category: z.string().optional(),
+    minPrice: z.coerce.number().optional(),
+    maxPrice: z.coerce.number().optional(),
+    inStock: z.boolean().optional(),
   })
 
-  static createValidator = vine.create({
-    name: vine.string().minLength(2).maxLength(100),
-    price: vine.number().positive(),
-    category: vine.string(),
-    inStock: vine.boolean().optional(),
+  static createValidator = z.object({
+    name: z.string().min(2).max(100),
+    price: z.coerce.number().positive(),
+    category: z.string(),
+    inStock: z.boolean().optional(),
   })
 
   /**

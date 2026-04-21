@@ -1,18 +1,20 @@
-import vine from '@vinejs/vine'
+import { z } from 'zod'
 
 /**
  * Shared rules for email and password.
  */
-const email = () => vine.string().email().maxLength(254)
-const password = () => vine.string().minLength(8).maxLength(32)
+const email = () => z.string().email().max(254)
+const password = () => z.string().min(8).max(32)
 
 /**
  * Validator to use when performing self-signup
  */
-export const signupValidator = vine.create({
-  fullName: vine.string(),
+export const signupValidator = z.object({
+  fullName: z.string(),
   email: email(),
-  password: password().confirmed({
-    confirmationField: 'passwordConfirmation',
-  }),
+  password: password(),
+  passwordConfirmation: z.string(),
+}).refine((data) => data.password === data.passwordConfirmation, {
+  message: 'Passwords do not match',
+  path: ['passwordConfirmation'],
 })

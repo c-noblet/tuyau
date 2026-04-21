@@ -1,19 +1,19 @@
-import vine from '@vinejs/vine'
+import { z } from 'zod'
 import { type HttpContext } from '@adonisjs/core/http'
 
 import User from '#models/user'
 import UserTransformer from '#transformers/user_transformer'
 
 export default class UsersController {
-  static createValidator = vine.create({
-    fullName: vine.string().minLength(2).maxLength(100),
-    email: vine.string().email(),
-    password: vine.string().minLength(6),
+  static createValidator = z.object({
+    fullName: z.string().min(2).max(100),
+    email: z.string().email(),
+    password: z.string().min(6),
   })
 
-  static updateValidator = vine.create({
-    fullName: vine.string().minLength(2).maxLength(100).optional(),
-    email: vine.string().email().optional(),
+  static updateValidator = z.object({
+    fullName: z.string().min(2).max(100).optional(),
+    email: z.string().email().optional(),
   })
 
   /**

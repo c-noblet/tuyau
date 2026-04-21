@@ -305,10 +305,10 @@ const routes = {
   /**
    * Route with headers and cookies validation (POST)
    * Simulates a validator like:
-   * vine.object({
-   *   username: vine.string(),
-   *   headers: vine.object({ authorization: vine.string() }),
-   *   cookies: vine.object({ sessionId: vine.string() }),
+   * z.object({
+   *   username: z.string(),
+   *   headers: z.object({ authorization: z.string() }),
+   *   cookies: z.object({ sessionId: z.string() }),
    * })
    */
   'secure.create': {
@@ -326,10 +326,10 @@ const routes = {
   /**
    * Route with headers, cookies and query validation (GET)
    * Simulates a validator like:
-   * vine.object({
-   *   search: vine.string().optional(),
-   *   headers: vine.object({ 'x-api-key': vine.string() }),
-   *   cookies: vine.object({ token: vine.string().optional() }),
+   * z.object({
+   *   search: z.string().optional(),
+   *   headers: z.object({ 'x-api-key': z.string() }),
+   *   cookies: z.object({ token: z.string().optional() }),
    * })
    */
   'secure.search': {
@@ -345,9 +345,9 @@ const routes = {
     },
   },
   /**
-   * Route with union body type (simulates vine.group with merge).
-   * When a validator uses vine.object({}).merge(vine.group([...])),
-   * the body type becomes a union of the group conditionals.
+   * Route with union body type (simulates Zod discriminated union).
+   * When a validator uses Zod discriminated union or similar construct,
+   * the body type becomes a union of the alternatives.
    */
   'session.store': {
     methods: ['POST'],

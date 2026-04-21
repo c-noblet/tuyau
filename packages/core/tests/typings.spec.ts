@@ -722,7 +722,7 @@ test.group('Client | Typings', (group) => {
   })
 })
 
-test.group('Union body types (vine.group)', (group) => {
+test.group('Union body types', (group) => {
   group.tap((t) => t.skip(true, 'skip typings tests'))
 
   test('ExtractBody preserves union types', ({ expectTypeOf }) => {

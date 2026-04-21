@@ -1,31 +1,27 @@
-import vine from '@vinejs/vine'
+import { z } from 'zod'
 import type { HttpContext } from '@adonisjs/core/http'
 
 import User from '#models/user'
 
 export default class SessionController {
   /**
-   * Validator using vine.group to accept either password or webauthn assertion.
+   * Validator using discriminated union to accept either password or webauthn assertion.
    * Tests that tuyau correctly handles union body types.
    */
-  static storeValidator = vine.create(
-    vine.object({}).merge(
-      vine
-        .group([
-          vine.group.if((data) => data.password, { password: vine.string() }),
-          vine.group.if((data) => data.assertion, {
-            assertion: vine.object({
-              id: vine.string(),
-              rawId: vine.string(),
-              type: vine.string(),
-            }),
-          }),
-        ])
-        .otherwise((_, field) => {
-          field.report('Password or assertion required', 'passwordOrAssertion', field)
-        })
-    )
-  )
+  static storeValidator = z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal('password'),
+      password: z.string(),
+    }),
+    z.object({
+      type: z.literal('webauthn'),
+      assertion: z.object({
+        id: z.string(),
+        rawId: z.string(),
+        type: z.string(),
+      }),
+    }),
+  ])
 
   async create({ inertia }: HttpContext) {
     return inertia.render('auth/login', {})
@@ -38,7 +34,7 @@ export default class SessionController {
     await auth.use('web').login(user)
     response.redirect().toRoute('home')
 
-    return { success: true, method: 'password' in payload ? 'password' : 'webauthn' }
+    return { success: true, method: payload.type }
   }
 
   async destroy({ auth, response }: HttpContext) {

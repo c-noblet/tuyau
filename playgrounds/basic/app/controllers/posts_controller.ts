@@ -1,4 +1,4 @@
-import vine from '@vinejs/vine'
+import { z } from 'zod'
 import { type HttpContext } from '@adonisjs/core/http'
 
 const posts: Array<{ id: number; title: string; content: string; authorId: number }> = [
@@ -15,22 +15,22 @@ const posts: Array<{ id: number; title: string; content: string; authorId: numbe
 ]
 
 export default class PostsController {
-  static listValidator = vine.create({
-    page: vine.number().optional(),
-    limit: vine.number().optional(),
-    search: vine.string().optional(),
-    authorId: vine.number().optional(),
+  static listValidator = z.object({
+    page: z.coerce.number().optional(),
+    limit: z.coerce.number().optional(),
+    search: z.string().optional(),
+    authorId: z.coerce.number().optional(),
   })
 
-  static createValidator = vine.create({
-    title: vine.string().minLength(3).maxLength(100),
-    content: vine.string().minLength(10),
-    authorId: vine.number(),
+  static createValidator = z.object({
+    title: z.string().min(3).max(100),
+    content: z.string().min(10),
+    authorId: z.coerce.number(),
   })
 
-  static updateValidator = vine.create({
-    title: vine.string().minLength(3).maxLength(100).optional(),
-    content: vine.string().minLength(10).optional(),
+  static updateValidator = z.object({
+    title: z.string().min(3).max(100).optional(),
+    content: z.string().min(10).optional(),
   })
 
   /**
